@@ -1,16 +1,14 @@
 name: mylang
 version: '1.0'
-summary: OfflineIMAP
-description: |
-  OfflineIMAP is software that downloads your email mailbox(es) as local
-  Maildirs. OfflineIMAP will synchronize both sides via IMAP.
+summary: mylangBASIC
+description: mylangBASIC is an open source project that is written in python, it is a very simple implementation of BASIC
 confinement: devmode
 base: core18
 
 parts:
   mylang:
     plugin: python
-    python-version: python2
+    python-version: python3
     source: https://github.com/snapcraft-docs/offlineimap.git
     stage-packages:
       - python-six
