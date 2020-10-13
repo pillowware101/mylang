@@ -1,2 +1,5 @@
 VAR x=10
-GETTYPE(x)
+VAR y=GETTYPE(x)
+IF x==10 THEN
+	PRINT(y)
+END
