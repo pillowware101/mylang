@@ -1885,11 +1885,8 @@ class BuiltInFunction(BaseFunction):
     return RTResult().success(Number.null)
   execute_run.arg_names = ["fn"]
 
-  def execute_gettype(self, var):
-    result, error=[type(var), type(var)]
-    if error:
-      return RTResult().failure(RTError(self.pos_start, self.pos_end, f"Failed to get the type of the variable \"{fn}\"\n" + error.as_string(), exec_ctx))
-    return RTResult().success(result)
+  def execute_gettype(self, exec_ctx):
+    return RTResult(String(str(exec_ctx.symbol_table.get("var"))))
   execute_gettype.arg_names = ["var"]
 
 BuiltInFunction.print       = BuiltInFunction("print")
@@ -1906,7 +1903,7 @@ BuiltInFunction.pop         = BuiltInFunction("pop")
 BuiltInFunction.extend      = BuiltInFunction("extend")
 BuiltInFunction.len					= BuiltInFunction("len")
 BuiltInFunction.run					= BuiltInFunction("run")
-BuiltInFunction.gettype                                 =BuiltInFunction("gettype")
+BuiltInFunction.gettype     =BuiltInFunction("gettype")
 
 #######################################
 # CONTEXT
