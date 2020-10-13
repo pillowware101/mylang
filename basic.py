@@ -1889,6 +1889,19 @@ class BuiltInFunction(BaseFunction):
     return RTResult().success(String(str(type(exec_ctx.symbol_table.get("var")))))
   execute_gettype.arg_names = ["var"]
 
+  def execute_sh(self, exec_ctx):
+    return RTResult().success(os.system(exec_ctx.symbol_table.get("var")))
+  execute_sh.arg_names['command']
+
+  def execute_exit(self, exec_ctx):
+    exit()
+    return RTResult().success(Number.null)
+  execute_exit.arg_names=[]
+  
+  def execute_sqrt(self, exec_ctx):
+    return RTResult().success(String(str(math.sqrt(exec_ctx.symbol_table.get('number')))))
+  execute_sqrt.arg_names=['number']
+
 BuiltInFunction.print       = BuiltInFunction("print")
 BuiltInFunction.print_ret   = BuiltInFunction("print_ret")
 BuiltInFunction.input       = BuiltInFunction("input")
@@ -1904,6 +1917,9 @@ BuiltInFunction.extend      = BuiltInFunction("extend")
 BuiltInFunction.len					= BuiltInFunction("len")
 BuiltInFunction.run					= BuiltInFunction("run")
 BuiltInFunction.gettype     =BuiltInFunction("gettype")
+BuiltInFunction.sqrt        =BuiltInFunction("sqrt")
+BuiltInFunction.exit        =BuiltInFunction("exit")
+BuiltInFunction.sh          =BuiltInFunction("sh")
 
 #######################################
 # CONTEXT
@@ -2216,6 +2232,10 @@ global_symbol_table.set("EXTEND", BuiltInFunction.extend)
 global_symbol_table.set("LEN", BuiltInFunction.len)
 global_symbol_table.set("RUN", BuiltInFunction.run)
 global_symbol_table.set("GETTYPE", BuiltInFunction.gettype)
+global_symbol_table.set("SQRT", BuiltInFunction.sqrt)
+global_symbol_table.set("EXIT", BuiltInFunction.exit)
+global_symbol_table.set("SH", BuiltInFunction.sh)
+
 
 def run(fn, text):
   # Generate tokens
