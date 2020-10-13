@@ -1,5 +1,10 @@
+RUN("string.myopl")
+
+VAR z=string_concat("hi, ", "Ishan")
 VAR x=10
 VAR y=GETTYPE(x)
 IF x==10 THEN
 	PRINT(y)
+	PRINT(z)
 END
+EXIT()
