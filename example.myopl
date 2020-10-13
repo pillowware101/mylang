@@ -1,4 +1,5 @@
 # This is a very useful piece of software
+#RUN("math.myopl")
 
 FUN oopify(prefix) -> prefix + "oop"
 
@@ -31,3 +32,4 @@ FOR i = 0 TO 5 THEN
 END
 
 VAR x=10
+EXIT()

@@ -3,6 +3,7 @@ import sys
 
 try:
 	basic.run('<stdin>', 'RUN("%s")'%sys.argv[1])
+	exit()
 except IndexError:
 	print('\n no such file... \n')
 	print('moving on to interactive shell\n')
