@@ -1903,6 +1903,10 @@ class BuiltInFunction(BaseFunction):
     return RTResult().success(Number.null)
   execute_sh.arg_names=['command']
 
+  def execute_square(self, exec_ctx):
+    return RTResult().success(String(str(float(str(exec_ctx.symbol_table.get('number'))) ** 2)))
+  execute_square.arg_names=["number"]
+
 BuiltInFunction.print       = BuiltInFunction("print")
 BuiltInFunction.print_ret   = BuiltInFunction("print_ret")
 BuiltInFunction.input       = BuiltInFunction("input")
@@ -1921,6 +1925,7 @@ BuiltInFunction.gettype     =BuiltInFunction("gettype")
 BuiltInFunction.sqrt        =BuiltInFunction("sqrt")
 BuiltInFunction.exit        =BuiltInFunction("exit")
 BuiltInFunction.sh          =BuiltInFunction("sh")  
+BuiltInFunction.square      =BuiltInFunction("square")
 
 #######################################
 # CONTEXT
@@ -2236,6 +2241,7 @@ global_symbol_table.set("GETTYPE", BuiltInFunction.gettype)
 global_symbol_table.set("SQRT", BuiltInFunction.sqrt)
 global_symbol_table.set("EXIT", BuiltInFunction.exit)
 global_symbol_table.set("SH", BuiltInFunction.sh)
+global_symbol_table.set("SQUARE", BuiltInFunction.square)
 
 def run(fn, text):
   # Generate tokens
