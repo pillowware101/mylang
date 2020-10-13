@@ -1886,7 +1886,7 @@ class BuiltInFunction(BaseFunction):
   execute_run.arg_names = ["fn"]
 
   def execute_gettype(self, exec_ctx):
-    return RTResult(String(str(exec_ctx.symbol_table.get("var"))))
+    return RTResult().success(String(str(type(exec_ctx.symbol_table.get("var")))))
   execute_gettype.arg_names = ["var"]
 
 BuiltInFunction.print       = BuiltInFunction("print")
