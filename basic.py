@@ -1889,18 +1889,19 @@ class BuiltInFunction(BaseFunction):
     return RTResult().success(String(str(type(exec_ctx.symbol_table.get("var")))))
   execute_gettype.arg_names = ["var"]
 
-  def execute_sh(self, exec_ctx):
-    return RTResult().success(os.system(exec_ctx.symbol_table.get("var")))
-  execute_sh.arg_names['command']
-
   def execute_exit(self, exec_ctx):
     exit()
     return RTResult().success(Number.null)
   execute_exit.arg_names=[]
-  
+
   def execute_sqrt(self, exec_ctx):
-    return RTResult().success(String(str(math.sqrt(exec_ctx.symbol_table.get('number')))))
-  execute_sqrt.arg_names=['number']
+    return RTResult().success(String(str(math.sqrt(int(str(exec_ctx.symbol_table.get('num')))))))
+  execute_sqrt.arg_names=['num']
+
+  def execute_sh(self, exec_ctx):
+    os.system(str(exec_ctx.symbol_table.get('command')))
+    return RTResult().success(Number.null)
+  execute_sh.arg_names=['command']
 
 BuiltInFunction.print       = BuiltInFunction("print")
 BuiltInFunction.print_ret   = BuiltInFunction("print_ret")
@@ -1919,7 +1920,7 @@ BuiltInFunction.run					= BuiltInFunction("run")
 BuiltInFunction.gettype     =BuiltInFunction("gettype")
 BuiltInFunction.sqrt        =BuiltInFunction("sqrt")
 BuiltInFunction.exit        =BuiltInFunction("exit")
-BuiltInFunction.sh          =BuiltInFunction("sh")
+BuiltInFunction.sh          =BuiltInFunction("sh")  
 
 #######################################
 # CONTEXT
@@ -2235,7 +2236,6 @@ global_symbol_table.set("GETTYPE", BuiltInFunction.gettype)
 global_symbol_table.set("SQRT", BuiltInFunction.sqrt)
 global_symbol_table.set("EXIT", BuiltInFunction.exit)
 global_symbol_table.set("SH", BuiltInFunction.sh)
-
 
 def run(fn, text):
   # Generate tokens
