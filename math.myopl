@@ -1,6 +1,0 @@
-FUN ABS(x)
-    IF x>=0 THEN
-        RETURN x
-    ELSE
-        VAR y=0-x
-        RETURN y
