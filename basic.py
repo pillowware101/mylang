@@ -1,6 +1,42 @@
 #Constants
 DIGITS="0123456789"
 
+#Errors
+class Error:
+  def __init__(self, pos_start, pos_end, error_name, details):
+    self.pos_start=pos_start
+    self.pos_end=pos_end
+    self.error_name=error_name
+    self.details=details
+  def as_string(self):
+    result=f'{self.error_name}: {self.details}'
+    return result
+
+class IllegalCharError(Error):
+  def __init__(self, details):
+    super.__init__("Illegal Character", details)
+
+#Position
+class Position:
+  def __init__(self, idx, ln, col):
+    self.idx=idx
+    self.ln=ln
+    self.col=col
+  
+  def advance(self, current_char):
+    self.idx+=1
+    self.col+=1
+
+    if current_char=="\n":
+      self.ln+=1
+      self.col=0
+
+    return self
+  
+  def copy(self):
+    return Position(self.idx, self.ln, self.col)
+
+
 #Tokens
 
 TT_INT        ="INT"
@@ -26,13 +62,13 @@ class Lexer:
   def __init__(self, fn, text):
     self.fn=fn
     self.text=text
-    self.pos=-1
+    self.pos=Position(-1, 0, -1)
     self.current_char=None
     self.advance()
 
   def advance(self):
-    self.pos+=1
-    self.current_char=self.text[self.pos] if self.pos < len(self.text) else None
+    self.pos.advance()
+    self.current_char=self.text[self.pos.idx] if self.pos.idx < len(self.text) else None
   
   def make_tokens(self):
     tokens=[]
@@ -53,9 +89,35 @@ class Lexer:
         tokens.appens(Token(TT_DIV))
         self.advance()
       elif self.current_char in DIGITS:
-        tokens.append(self.make_number(self.current_char))
+        tokens.append(self.make_number())
         self.advance()
+      else:
+        #return an IllegalCharError
+        pos_start=self.pos.copy()
+        char=self.current_char
+        self.advance()
+        return [], IllegalCharError(pos_start, self.pos, " '"+char+"' ")
 
     return tokens
   def make_number(self, number):
-    pass
+    num_str=''
+    dot_count=0
+    while self.current_char!=None and self.current_char in DIGITS+'.':
+      if self.current_char=='.':
+        if dot_count==1: break
+        dot_count+=1
+        num_str+='.'
+      else:
+        num_str+=self.current_char
+      self.advance()
+    
+    if dot_count==0:
+      return Token(TT_INT, int(num_str))
+    else:
+      return Token(TT_FLOAT, float(num_str))
+
+#Run
+def run(fn, text):
+  lexer=Lexer(fn, text)
+  tokens, error=lexer.make_tokens(text)
+  return tokens, error

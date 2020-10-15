@@ -1,5 +1,8 @@
+import basic
+
 while True:
-	text=input('basic>')
-	if text=='brexit':
-		exit()
-	print(text)
+	text=input("basic> ")
+	result, error=basic.run(text)
+
+	if error: print(error.as_string())
+	else: print(result)
