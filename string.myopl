@@ -49,5 +49,3 @@ FUN string_lastIndexOf(str, char)
 
   RETURN -1
 END
-
-PRINT("string loaded"); RETURN 0

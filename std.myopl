@@ -1,0 +1,3 @@
+FUN INCLUDE(file)
+    RUN(file)
+END

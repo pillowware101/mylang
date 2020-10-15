@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.cs": "csharp",
+        "*.sln": "plaintext",
+        "system_error": "cpp",
+        "type_traits": "cpp",
+        "xtr1common": "cpp",
+        "iostream": "cpp"
+    }
+}

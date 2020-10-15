@@ -4,3 +4,5 @@ FUN ABS(x)
     ELSE
         VAR y=0-x
         RETURN y
+    END
+END

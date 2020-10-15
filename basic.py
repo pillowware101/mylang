@@ -21,6 +21,8 @@ LETTERS_DIGITS = LETTERS + DIGITS
 # ERRORS
 #######################################
 
+globalvars={}
+
 class Error:
   def __init__(self, pos_start, pos_end, error_name, details):
     self.pos_start = pos_start
@@ -123,6 +125,9 @@ TT_COMMA			= 'COMMA'
 TT_ARROW			= 'ARROW'
 TT_NEWLINE		= 'NEWLINE'
 TT_EOF				= 'EOF'
+TT_OBJECT     ='OBJECT'
+TT_RCURL      ='RCURL'
+TT_LCURL      ='LCURL'
 
 KEYWORDS = [
   'VAR',
@@ -142,7 +147,6 @@ KEYWORDS = [
   'RETURN',
   'CONTINUE',
   'BREAK',
-  'CLASS'
 ]
 
 class Token:
@@ -196,6 +200,10 @@ class Lexer:
         tokens.append(self.make_number())
       elif self.current_char in LETTERS:
         tokens.append(self.make_identifier())
+      elif self.current_char=="{":
+        tokens.appens(Token(TT_LCURL, pos_start=self.pos))
+      elif self.current_char=="}":
+        tokens.appens(Token(TT_RCURL, pos_start=self.pos))
       elif self.current_char == '"':
         tokens.append(self.make_string())
       elif self.current_char == '+':
@@ -405,6 +413,8 @@ class VarAccessNode:
 
 class VarAssignNode:
   def __init__(self, var_name_tok, value_node):
+    global globalvars
+    globalvars[var_name_tok]=value_node
     self.var_name_tok = var_name_tok
     self.value_node = value_node
 
@@ -683,7 +693,7 @@ class Parser:
     if res.error:
       return res.failure(InvalidSyntaxError(
         self.current_tok.pos_start, self.current_tok.pos_end,
-        "Expected 'VAR', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, '+', '-', '(', '[' or 'NOT'"
+        "Expected 'VAR', 'CLASS', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, '+', '-', '(', '[' or 'NOT'"
       ))
 
     return res.success(node)
@@ -1909,6 +1919,11 @@ class BuiltInFunction(BaseFunction):
     return RTResult().success(String(str(float(str(exec_ctx.symbol_table.get('number'))) ** 2)))
   execute_square.arg_names=["number"]
 
+  def execute_del(self, exec_ctx):
+    del globals() [exec_ctx.symbol_table.get('variable')]
+    return RTResult().success(Number.null)
+  execute_del.arg_names=['variable']
+  
 BuiltInFunction.print       = BuiltInFunction("print")
 BuiltInFunction.print_ret   = BuiltInFunction("print_ret")
 BuiltInFunction.input       = BuiltInFunction("input")
@@ -1928,6 +1943,7 @@ BuiltInFunction.sqrt        =BuiltInFunction("sqrt")
 BuiltInFunction.exit        =BuiltInFunction("exit")
 BuiltInFunction.sh          =BuiltInFunction("sh")  
 BuiltInFunction.square      =BuiltInFunction("square")
+BuiltInFunction.del_var     =BuiltInFunction("del")
 
 #######################################
 # CONTEXT
@@ -2244,6 +2260,7 @@ global_symbol_table.set("SQRT", BuiltInFunction.sqrt)
 global_symbol_table.set("EXIT", BuiltInFunction.exit)
 global_symbol_table.set("SH", BuiltInFunction.sh)
 global_symbol_table.set("SQUARE", BuiltInFunction.square)
+global_symbol_table.set("DEL", BuiltInFunction.del_var)
 
 def run(fn, text):
   # Generate tokens
