@@ -1,2 +1,5 @@
 while True:
-	text=input("basic> ")
+	text=input('basic>')
+	if text=='brexit':
+		exit()
+	print(text)
