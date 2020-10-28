@@ -1,0 +1,9 @@
+Lexer:
+  -add CLASS keyword to keywords list
+  -add EXTENDS keyword to keyword list
+
+Parser:
+  -add class-def function
+  -add class-def to atom
+  -add ClassDefNode
+  -add ObjInitNode

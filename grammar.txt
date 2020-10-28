@@ -29,6 +29,7 @@ atom        : INT|FLOAT|STRING|IDENTIFIER
             : for-expr
             : while-expr
             : func-def
+            : class-def
 
 list-expr   : LSQUARE (expr (COMMA expr)*)? RSQUARE
 
@@ -57,3 +58,8 @@ func-def    : KEYWORD:FUN IDENTIFIER?
               LPAREN (IDENTIFIER (COMMA IDENTIFIER)*)? RPAREN
               (ARROW expr)
             | (NEWLINE statements KEYWORD:END)
+
+class-def   :KEYWORD:CLASS IDENTIFIER
+             LPAREN(IDENTIFIER(COMMA IDENTIFIER)*)? RPAREN
+             (ARROW expr)
+             |(NEWLINE statement KEYWORD:END)
