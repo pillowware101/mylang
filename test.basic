@@ -1,2 +1,2 @@
-RUN("string.pib")
+RUN("string.basic")
 PRINT("HI, the program works")
