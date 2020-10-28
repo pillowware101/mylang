@@ -13,8 +13,10 @@ while True:
 	result, error=basic.run('<stdin>', text)
 
 	if error: 
+		'''
 		try:
 			exec(text)
 		except:
-			print(error.as_string())
+			'''
+		print(error.as_string())
 	elif result: print(result)
