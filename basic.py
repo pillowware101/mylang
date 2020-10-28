@@ -1859,7 +1859,8 @@ class BuiltInFunction(BaseFunction):
   execute_gettype.arg_names=["var"]
 
   def execute_exit(self, exec_ctx):
-    exit()
+    import sys
+    sys.exit()
     return RTResult().success(Number.null)
   execute_exit.arg_names=[]
 
