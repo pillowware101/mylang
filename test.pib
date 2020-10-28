@@ -1,1 +1,2 @@
 RUN("string.pib")
+PRINT("HI, the program works")

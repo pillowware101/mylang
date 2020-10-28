@@ -7,3 +7,9 @@ Parser:
   -add class-def to atom
   -add ClassDefNode
   -add ObjInitNode
+  -add obj-init function
+  -add obj-init to atom
+
+Interpreter:
+  -add visit_ClassDefNode method
+  -add visit_ObjInitNode method
