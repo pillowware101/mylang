@@ -6,3 +6,5 @@ FUN ABS(x)
         RETURN y
     END
 END
+
+VAR PI=3.14159265358979

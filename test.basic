@@ -1,2 +1,2 @@
 RUN("string.basic")
-PRINT("HI, the program works")
+PRINT(string_concat(TOSTRING(20), TOSTRING(20)))

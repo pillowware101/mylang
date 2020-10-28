@@ -1869,6 +1869,10 @@ class BuiltInFunction(BaseFunction):
     return RTResult().success(Number.null)
   execute_sh.arg_names=['command']
 
+  def execute_tostring(self, exec_ctx):
+    return RTResult().success(String(f'{exec_ctx.symbol_table.get("nonstring")}'))
+  execute_tostring.arg_names=["nonstring"]
+
 BuiltInFunction.print       = BuiltInFunction("print")
 BuiltInFunction.print_ret   = BuiltInFunction("print_ret")
 BuiltInFunction.input       = BuiltInFunction("input")
@@ -1886,6 +1890,7 @@ BuiltInFunction.run					= BuiltInFunction("run")
 BuiltInFunction.gettype     = BuiltInFunction("gettype")
 BuiltInFunction.exit        = BuiltInFunction("exit")
 BuiltInFunction.sh          = BuiltInFunction("sh")
+BuiltInFunction.tostring    = BuiltInFunction("tostring")
 
 #######################################
 # CONTEXT
@@ -2200,6 +2205,7 @@ global_symbol_table.set("RUN", BuiltInFunction.run)
 global_symbol_table.set("GETTYPE", BuiltInFunction.gettype)
 global_symbol_table.set("EXIT", BuiltInFunction.exit)
 global_symbol_table.set("SH", BuiltInFunction.sh)
+global_symbol_table.set("TOSTRING", BuiltInFunction.tostring)
 
 def run(fn, text):
   # Generate tokens
