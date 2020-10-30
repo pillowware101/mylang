@@ -7,6 +7,9 @@ rmdir build
 cd dist
 mv shell basic
 mv basic ~/basicbin
+cd ..
+rmdir dist
+rm shell.spec
 
 #add basicbin to your path
 export PATH=$PATH:~/basicbin
