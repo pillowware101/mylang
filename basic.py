@@ -1874,6 +1874,10 @@ class BuiltInFunction(BaseFunction):
     return RTResult().success(String(f'{exec_ctx.symbol_table.get("nonstring")}'))
   execute_tostring.arg_names=["nonstring"]
 
+  def execute_tonum(self, exec_ctx):
+    return RTResult().success(Number(float(str(exec_ctx.symbol_table.get("nonnumber")))))
+  execute_tonum.arg_names=["nonnumber"]
+
 BuiltInFunction.print       = BuiltInFunction("print")
 BuiltInFunction.print_ret   = BuiltInFunction("print_ret")
 BuiltInFunction.input       = BuiltInFunction("input")
@@ -1892,6 +1896,7 @@ BuiltInFunction.gettype     = BuiltInFunction("gettype")
 BuiltInFunction.exit        = BuiltInFunction("exit")
 BuiltInFunction.sh          = BuiltInFunction("sh")
 BuiltInFunction.tostring    = BuiltInFunction("tostring")
+BuiltInFunction.tonum       = BuiltInFunction("tonum")
 
 #######################################
 # CONTEXT
@@ -2207,6 +2212,7 @@ global_symbol_table.set("GETTYPE", BuiltInFunction.gettype)
 global_symbol_table.set("EXIT", BuiltInFunction.exit)
 global_symbol_table.set("SH", BuiltInFunction.sh)
 global_symbol_table.set("TOSTRING", BuiltInFunction.tostring)
+global_symbol_table.set("TONUM", BuiltInFunction.tonum)
 
 def run(fn, text):
   # Generate tokens
