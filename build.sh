@@ -1,6 +1,5 @@
 #create binaries
-pip3 install pyinstaler
-pyinstaller --onefile shell.py
+python3 ~/Documents/mylang/otherbuild.py
 mkdir ~/basicbin
 rm -r build/*
 rmdir build
@@ -13,4 +12,4 @@ rm shell.spec
 
 #add basicbin to your path
 export PATH=$PATH:~/basicbin
-python3 build.py
+python3 ~/Documents/mylang/build.py
