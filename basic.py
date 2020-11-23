@@ -142,6 +142,9 @@ KEYWORDS = [
   'RETURN',
   'CONTINUE',
   'BREAK',
+  'CONST',
+  'CLASS',
+  'OBJECT',
 ]
 
 class Token:
