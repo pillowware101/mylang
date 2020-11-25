@@ -125,6 +125,8 @@ class Console(Frame):
         self.ttyText.pack(fill=BOTH,expand=True)
 
 root=Tk()
+editor=CustomScrolledText(root)
 main_console = Console(root)
+editor.pack(side=TOP, fill=BOTH, expand=True)
 main_console.pack(fill=BOTH,expand=True, side='bottom')
 root.mainloop()
