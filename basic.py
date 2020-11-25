@@ -7,6 +7,7 @@ from strings_with_arrows import *
 import string
 import os
 import math
+import sys
 
 #######################################
 # CONSTANTS
@@ -141,6 +142,9 @@ KEYWORDS = [
   'RETURN',
   'CONTINUE',
   'BREAK',
+  'CONST',
+  'CLASS',
+  'OBJECT',
 ]
 
 class Token:
@@ -1585,6 +1589,8 @@ class List(Value):
   def __repr__(self):
     return f'[{", ".join([repr(x) for x in self.elements])}]'
 
+List.urls=List(['https://www.reddit.com/r/theyknew/comments/jvi8ie/we_were_too_young_to_notice/?utm_source=share&utm_medium=web2x&context=3'])
+
 class BaseFunction(Value):
   def __init__(self, name):
     super().__init__()
@@ -1716,7 +1722,7 @@ class BuiltInFunction(BaseFunction):
   execute_input_int.arg_names = []
 
   def execute_clear(self, exec_ctx):
-    os.system('cls' if os.name == 'nt' else 'cls') 
+    os.system('cls' if sys.platform=='win32' else 'clear') 
     return RTResult().success(Number.null)
   execute_clear.arg_names = []
 
@@ -1873,6 +1879,16 @@ class BuiltInFunction(BaseFunction):
     return RTResult().success(String(f'{exec_ctx.symbol_table.get("nonstring")}'))
   execute_tostring.arg_names=["nonstring"]
 
+  def execute_tonum(self, exec_ctx):
+    return RTResult().success(Number(float(str(exec_ctx.symbol_table.get("nonnumber")))))
+  execute_tonum.arg_names=["nonnumber"]
+
+  def execute_makemelaugh(self, exec_ctx):
+    import random, webbrowser
+    webbrowser.open(random.choice(['https://www.reddit.com/r/theyknew/comments/jvi8ie/we_were_too_young_to_notice/?utm_source=share&utm_medium=web2x&context=3', 'https://www.reddit.com/r/memes/comments/k0b4tm/oh_no_no_no_no/?utm_source=share&utm_medium=web2x&context=3']))
+    return RTResult().success(Number.null)
+  execute_makemelaugh.arg_names=[]
+
 BuiltInFunction.print       = BuiltInFunction("print")
 BuiltInFunction.print_ret   = BuiltInFunction("print_ret")
 BuiltInFunction.input       = BuiltInFunction("input")
@@ -1891,6 +1907,8 @@ BuiltInFunction.gettype     = BuiltInFunction("gettype")
 BuiltInFunction.exit        = BuiltInFunction("exit")
 BuiltInFunction.sh          = BuiltInFunction("sh")
 BuiltInFunction.tostring    = BuiltInFunction("tostring")
+BuiltInFunction.tonum       = BuiltInFunction("tonum")
+BuiltInFunction.makemelaugh = BuiltInFunction("makemelaugh")
 
 #######################################
 # CONTEXT
@@ -2181,7 +2199,6 @@ class Interpreter:
 #######################################
 # RUN
 #######################################
-
 global_symbol_table = SymbolTable()
 global_symbol_table.set("NULL", Number.null)
 global_symbol_table.set("FALSE", Number.false)
@@ -2206,6 +2223,9 @@ global_symbol_table.set("GETTYPE", BuiltInFunction.gettype)
 global_symbol_table.set("EXIT", BuiltInFunction.exit)
 global_symbol_table.set("SH", BuiltInFunction.sh)
 global_symbol_table.set("TOSTRING", BuiltInFunction.tostring)
+global_symbol_table.set("TONUM", BuiltInFunction.tonum)
+global_symbol_table.set("URLS", List.urls)
+global_symbol_table.set("MAKEMELAUGH", BuiltInFunction.makemelaugh)
 
 def run(fn, text):
   # Generate tokens
