@@ -644,13 +644,15 @@ class Parser:
     if res.error:
       return res.failure(InvalidSyntaxError(
         self.current_tok.pos_start, self.current_tok.pos_end,
-        "Expected 'RETURN', 'CONTINUE', 'BREAK', 'VAR', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, '+', '-', '(', '[' or 'NOT'"
+        "Expected 'RETURN', 'CONTINUE', 'BREAK', 'VAR', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, 'CONST', '+', '-', '(', '[' or 'NOT'"
       ))
     return res.success(expr)
 
   def expr(self):
     res = ParseResult()
-
+    if self.current_tok.matches(TT_KEYWORD, 'CONST'):
+      res.register_advancement()
+      self.advance()
     if self.current_tok.matches(TT_KEYWORD, 'VAR'):
       res.register_advancement()
       self.advance()

@@ -1,10 +1,8 @@
-import basic, os
 from tkinter import *
 from tkinter.ttk import *
-import subprocess
 from threading import Thread
 import tkinter.scrolledtext as scrolledtext
-import queue
+import pickle, io, queue, subprocess, basic, os
 
 class CustomScrolledText(scrolledtext.ScrolledText):
     '''A text widget with a new method, highlight_pattern()
@@ -124,9 +122,119 @@ class Console(Frame):
         self.ttyText = Text(self, wrap=WORD)
         self.ttyText.pack(fill=BOTH,expand=True)
 
+class CustomNotebook(Notebook):
+    """A ttk Notebook with close buttons on each tab"""
+
+    __initialized = False
+
+    def __init__(self, *args, **kwargs):
+        if not self.__initialized:
+            self.__initialize_custom_style()
+            self.__inititialized = True
+
+        kwargs["style"] = "CustomNotebook"
+        Notebook.__init__(self, *args, **kwargs)
+
+        self._active = None
+
+        self.bind("<ButtonPress-1>", self.on_close_press, True)
+        self.bind("<ButtonRelease-1>", self.on_close_release)
+
+    def on_close_press(self, event):
+        """Called when the button is pressed over the close button"""
+
+        element = self.identify(event.x, event.y)
+
+        if "close" in element:
+            index = self.index("@%d,%d" % (event.x, event.y))
+            self.state(['pressed'])
+            self._active = index
+
+    def on_close_release(self, event):
+        """Called when the button is released over the close button"""
+        if not self.instate(['pressed']):
+            return
+
+        element =  self.identify(event.x, event.y)
+        index = self.index("@%d,%d" % (event.x, event.y))
+
+        if "close" in element and self._active == index:
+            self.forget(index)
+            self.event_generate("<<NotebookTabClosed>>")
+
+        self.state(["!pressed"])
+        self._active = None
+
+    def __initialize_custom_style(self):
+        style = Style()
+        self.images = (
+            PhotoImage("img_close", data='''
+                R0lGODlhCAAIAMIBAAAAADs7O4+Pj9nZ2Ts7Ozs7Ozs7Ozs7OyH+EUNyZWF0ZWQg
+                d2l0aCBHSU1QACH5BAEKAAQALAAAAAAIAAgAAAMVGDBEA0qNJyGw7AmxmuaZhWEU
+                5kEJADs=
+                '''),
+            PhotoImage("img_closeactive", data='''
+                R0lGODlhCAAIAMIEAAAAAP/SAP/bNNnZ2cbGxsbGxsbGxsbGxiH5BAEKAAQALAAA
+                AAAIAAgAAAMVGDBEA0qNJyGw7AmxmuaZhWEU5kEJADs=
+                '''),
+            PhotoImage("img_closepressed", data='''
+                R0lGODlhCAAIAMIEAAAAAOUqKv9mZtnZ2Ts7Ozs7Ozs7Ozs7OyH+EUNyZWF0ZWQg
+                d2l0aCBHSU1QACH5BAEKAAQALAAAAAAIAAgAAAMVGDBEA0qNJyGw7AmxmuaZhWEU
+                5kEJADs=
+            ''')
+        )
+
+        style.element_create("close", "image", "img_close",
+                            ("active", "pressed", "!disabled", "img_closepressed"),
+                            ("active", "!disabled", "img_closeactive"), border=8, sticky='')
+        style.layout("CustomNotebook", [("CustomNotebook.client", {"sticky": "nswe"})])
+        style.layout("CustomNotebook.Tab", [
+            ("CustomNotebook.tab", {
+                "sticky": "nswe", 
+                "children": [
+                    ("CustomNotebook.padding", {
+                        "side": "top", 
+                        "sticky": "nswe",
+                        "children": [
+                            ("CustomNotebook.focus", {
+                                "side": "top", 
+                                "sticky": "nswe",
+                                "children": [
+                                    ("CustomNotebook.label", {"side": "left", "sticky": ''}),
+                                    ("CustomNotebook.close", {"side": "left", "sticky": ''}),
+                                ]
+                        })
+                    ]
+                })
+            ]
+        })
+    ])
+
+class File():
+    def __init__(self, name, location, filefilter):
+        self.name=location+name
+        self.filefilter=filefilter
+
+def new():
+    frame=Frame(notebook)
+    editor=CustomScrolledText(frame)
+    notebook.add(frame, text="New File")
+
 root=Tk()
-editor=CustomScrolledText(root)
+menubar=Menu(root)
+filemenu = Menu(menubar, tearoff = 0)
+filemenu.add_command(label="New", command = new)
+filemenu.add_separator()
+menubar.add_cascade(label="File", menu=filemenu)
+
+notebook = CustomNotebook(width=200, height=200)
+notebook.pack(side="top", fill="both", expand=True)
+frame=Frame(notebook)
+editor=CustomScrolledText(frame)
+notebook.add(frame, text="New File")
 main_console = Console(root)
 editor.pack(side=TOP, fill=BOTH, expand=True)
 main_console.pack(fill=BOTH,expand=True, side='bottom')
+
+root.config(menu = menubar)
 root.mainloop()
