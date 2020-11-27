@@ -220,6 +220,8 @@ def new():
     editor=CustomScrolledText(frame)
     notebook.add(frame, text="New File")
 
+def save(): pass
+
 root=Tk()
 menubar=Menu(root)
 filemenu = Menu(menubar, tearoff = 0)
